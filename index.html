@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AETHER ESTATES — Недвижимость нового уровня</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700;800&family=Forum&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#07090f;
+      --bg-soft:#0f1524;
+      --gold:#d6b370;
+      --ice:#d8e6ff;
+      --muted:#8b98b7;
+      --line:rgba(214,179,112,.24);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:#fff;font-family:Manrope,system-ui}
+    body{overflow-x:hidden;cursor:none}
+
+    .cursor,.cursor-dot{position:fixed;left:0;top:0;pointer-events:none;z-index:2000;transform:translate(-50%,-50%)}
+    .cursor{width:36px;height:36px;border:1px solid rgba(214,179,112,.55);border-radius:50%;transition:width .2s,height .2s,border-color .2s}
+    .cursor-dot{width:6px;height:6px;background:var(--gold);border-radius:50%}
+    .cursor.grow{width:62px;height:62px;border-color:#f1d6a0}
+
+    .preloader{position:fixed;inset:0;background:#06080d;display:grid;place-items:center;z-index:3000;transition:.8s}
+    .preloader.hide{opacity:0;visibility:hidden}
+    .preloader h1{font-family:Forum,serif;letter-spacing:.2em;font-size:clamp(2rem,6vw,5rem);margin:0}
+    .preloader p{margin:10px 0 0;color:var(--muted);letter-spacing:.35em;font-size:.78rem;text-align:center}
+
+    .noise::before{content:"";position:fixed;inset:-100%;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="3" stitchTiles="stitch"/></filter><rect width="300" height="300" filter="url(%23n)" opacity=".12"/></svg>');animation:grain 8s steps(10) infinite;pointer-events:none;z-index:999}
+    @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-8%,6%)}50%{transform:translate(6%,-6%)}75%{transform:translate(2%,4%)}100%{transform:translate(0,0)}}
+
+    header{position:fixed;inset:0 0 auto 0;z-index:1000;padding:20px 6vw;display:flex;justify-content:space-between;align-items:center;mix-blend-mode:screen}
+    .logo{font-family:Forum,serif;font-size:1.2rem;letter-spacing:.16em}
+    .logo span{color:var(--gold)}
+    nav a{color:#fff;text-decoration:none;margin-left:24px;font-size:.9rem;opacity:.85}
+
+    .hero{height:100vh;position:relative;display:flex;align-items:flex-end;padding:0 6vw 9vh;overflow:hidden}
+    .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.45) saturate(1.1)}
+    .hero::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,rgba(214,179,112,.25),transparent 45%),linear-gradient(to top,rgba(4,6,10,.95),rgba(4,6,10,.15) 52%,rgba(4,6,10,.8));}
+    .hero-content{position:relative;z-index:2;max-width:920px}
+    .eyebrow{letter-spacing:.4em;color:#d2b47d;font-size:.72rem;text-transform:uppercase}
+    .hero h1{font-family:Forum,serif;font-weight:400;line-height:.9;margin:.35em 0;font-size:clamp(2.6rem,9vw,8.4rem)}
+    .hero p{max-width:620px;color:#dbe5ff;font-size:1.06rem;line-height:1.6}
+
+    .btn{display:inline-block;padding:14px 24px;border:1px solid var(--line);color:#fff;text-decoration:none;margin-top:18px;position:relative;overflow:hidden;transition:.35s}
+    .btn::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent,rgba(214,179,112,.35),transparent);transform:translateX(-130%);transition:.5s}
+    .btn:hover::before{transform:translateX(130%)}
+    .btn:hover{border-color:#f5d7a1;transform:translateY(-2px)}
+
+    .marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden;background:#0a0e18;position:relative;z-index:2}
+    .track{display:inline-block;padding:15px 0;animation:mar 22s linear infinite;color:#e4d2ad;letter-spacing:.2em;text-transform:uppercase;font-size:.78rem}
+    @keyframes mar{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+    section{padding:90px 6vw;border-bottom:1px solid rgba(214,179,112,.11)}
+    .title{font-family:Forum,serif;font-size:clamp(2rem,5vw,4.6rem);margin:0 0 10px}
+    .muted{color:var(--muted)}
+
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:32px;align-items:end}
+    .image-wrap{position:relative;overflow:hidden;border-radius:2px}
+    .image-wrap img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.05);transition:1s}
+    .image-wrap:hover img{transform:scale(1.12)}
+    .image-wrap::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(5,8,14,.75),transparent 55%)}
+
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px}
+    .stat{padding:18px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0));border:1px solid rgba(214,179,112,.16)}
+    .stat b{display:block;font-family:Forum,serif;font-size:2rem;color:var(--gold)}
+    .stat span{color:var(--muted);font-size:.86rem}
+
+    .properties{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{background:var(--bg-soft);border:1px solid rgba(214,179,112,.14);overflow:hidden;transform:translateY(20px);opacity:0;transition:.7s}
+    .card img{width:100%;height:230px;object-fit:cover;display:block}
+    .card-content{padding:18px}
+    .card h3{margin:0 0 8px;font-weight:700}
+    .price{color:var(--gold);font-weight:700}
+    .card.reveal{transform:translateY(0);opacity:1}
+
+    .split{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px}
+    .panel{padding:30px;border:1px solid rgba(214,179,112,.18);background:linear-gradient(140deg,rgba(214,179,112,.08),rgba(10,14,24,.2))}
+
+    .cta{padding:90px 6vw;text-align:center;background:radial-gradient(circle at 50% 10%,rgba(214,179,112,.16),transparent 60%),#090d17}
+    .cta h2{font-family:Forum,serif;font-size:clamp(2rem,6vw,5rem);margin:0}
+
+    footer{padding:28px 6vw;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+
+    .reveal-up{opacity:0;transform:translateY(22px);transition:.8s}
+    .reveal-up.show{opacity:1;transform:none}
+
+    @media (max-width:980px){
+      body,.btn,nav a{cursor:auto}
+      .cursor,.cursor-dot{display:none}
+      .grid,.split{grid-template-columns:1fr}
+      .properties{grid-template-columns:1fr}
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .hero{padding-bottom:11vh}
+      nav{display:none}
+    }
+  </style>
+</head>
+<body class="noise">
+  <div class="preloader" id="preloader">
+    <div>
+      <h1>AETHER</h1>
+      <p>ESTATES • PRIVATE COLLECTION</p>
+    </div>
+  </div>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <header>
+    <div class="logo">AETHER <span>ESTATES</span></div>
+    <nav>
+      <a href="#about">О нас</a>
+      <a href="#catalog">Объекты</a>
+      <a href="#contact">Контакт</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <video autoplay muted loop playsinline>
+      <source src="./assets/hero-video.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-content reveal-up">
+      <div class="eyebrow">premium real estate agency</div>
+      <h1>Дом, в который хочется войти<br>до первого шага</h1>
+      <p>Мы подбираем редкие объекты с характером: пентхаусы, waterfront-резиденции и инвестиционные проекты премиум-класса. AETHER — не про метры. AETHER — про уровень жизни.</p>
+      <a class="btn magnet" href="#catalog">Смотреть коллекцию</a>
+    </div>
+  </section>
+
+  <div class="marquee">
+    <div class="track"> • PRIVATE SALES • OFF-MARKET DEALS • LEGAL DUE DILIGENCE • TURNKEY INTERIOR • PRIVATE SALES • OFF-MARKET DEALS • LEGAL DUE DILIGENCE • TURNKEY INTERIOR </div>
+    <div class="track"> • PRIVATE SALES • OFF-MARKET DEALS • LEGAL DUE DILIGENCE • TURNKEY INTERIOR • PRIVATE SALES • OFF-MARKET DEALS • LEGAL DUE DILIGENCE • TURNKEY INTERIOR </div>
+  </div>
+
+  <section id="about">
+    <div class="grid">
+      <div class="reveal-up">
+        <h2 class="title">Рынок недвижимости поменялся. Мы — тоже.</h2>
+        <p class="muted">Мы строим опыт, в котором клиент не «ищет квартиру», а выбирает следующий этап своей жизни. От стратегии покупки до полного сопровождения сделки и дизайн-концепта — в одной команде.</p>
+        <div class="stats">
+          <div class="stat"><b data-counter="11">0</b><span>лет на рынке</span></div>
+          <div class="stat"><b data-counter="860">0</b><span>закрытых сделок</span></div>
+          <div class="stat"><b data-counter="27">0</b><span>городов / локаций</span></div>
+          <div class="stat"><b data-counter="98">0</b><span>% клиентов по рекомендации</span></div>
+        </div>
+      </div>
+      <div class="image-wrap reveal-up"><img src="./assets/interior.jpg" alt="Интерьер" loading="lazy"></div>
+    </div>
+  </section>
+
+  <section id="catalog">
+    <h2 class="title reveal-up">Коллекция объектов</h2>
+    <p class="muted reveal-up">Сейчас в private-листе: 4 выделенных предложения для клиентов, которые выбирают не просто квадратные метры.</p>
+    <div class="properties" style="margin-top:22px">
+      <article class="card"><img src="./assets/hero.jpg" alt="Skyline Tower" loading="lazy"><div class="card-content"><h3>Skyline One Penthouse</h3><div class="price">$3.2M</div><p class="muted">Панорамные виды 270°, приватный лифт, терраса 140 м².</p></div></article>
+      <article class="card"><img src="./assets/bedroom.jpg" alt="Coastal Residence" loading="lazy"><div class="card-content"><h3>Harbor Signature Residence</h3><div class="price">$2.4M</div><p class="muted">Мастер-сьют с видом на залив, smart-home и concierge.</p></div></article>
+      <article class="card"><img src="./assets/pool.jpg" alt="Rooftop villa" loading="lazy"><div class="card-content"><h3>Rooftop Villa 58</h3><div class="price">$4.1M</div><p class="muted">Infinity pool, private spa-zone и лаунж под открытым небом.</p></div></article>
+    </div>
+  </section>
+
+  <section>
+    <div class="split">
+      <div class="panel reveal-up">
+        <h3 style="margin:0 0 12px;font-size:1.5rem">Почему выбирают AETHER</h3>
+        <p class="muted">Мы работаем на опережение: собственная база off-market лотов, проверка юридических рисков, персональные маршруты показов и переговоры на стороне клиента.</p>
+        <a class="btn magnet" href="#contact">Запросить подбор</a>
+      </div>
+      <div class="image-wrap reveal-up"><img src="./assets/interior.jpg" alt="Design" loading="lazy"></div>
+    </div>
+  </section>
+
+  <section id="contact" class="cta">
+    <h2>Найдём объект, после которого<br>другие варианты станут неинтересны</h2>
+    <p class="muted" style="max-width:640px;margin:14px auto 0">Оставь заявку — в течение 24 часов соберём персональную подборку с инвестиционной оценкой и реальными кейсами по доходности.</p>
+    <a class="btn magnet" href="mailto:hello@aether-estates.com">hello@aether-estates.com</a>
+  </section>
+
+  <footer>
+    <span>© 2026 AETHER ESTATES</span>
+    <span>Private office: +7 (999) 555-44-11</span>
+  </footer>
+
+<script>
+  const preloader = document.getElementById('preloader');
+  window.addEventListener('load', () => setTimeout(() => preloader.classList.add('hide'), 1400));
+
+  const cursor = document.getElementById('cursor');
+  const dot = document.getElementById('cursorDot');
+  window.addEventListener('mousemove', e => {
+    cursor.style.transform = `translate(${e.clientX}px,${e.clientY}px)`;
+    dot.style.transform = `translate(${e.clientX}px,${e.clientY}px)`;
+  });
+  document.querySelectorAll('a,.card,.magnet').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cursor.classList.add('grow'));
+    el.addEventListener('mouseleave',()=>cursor.classList.remove('grow'));
+  });
+
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){ entry.target.classList.add('show'); }
+    });
+  },{threshold:.2});
+  document.querySelectorAll('.reveal-up').forEach(el=>io.observe(el));
+
+  const cards = document.querySelectorAll('.card');
+  const cardIo = new IntersectionObserver((entries)=>{
+    entries.forEach((entry,i)=>{ if(entry.isIntersecting){ setTimeout(()=>entry.target.classList.add('reveal'), i*110); }});
+  },{threshold:.2});
+  cards.forEach(c=>cardIo.observe(c));
+
+  const counters = document.querySelectorAll('[data-counter]');
+  const counterIo = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting) return;
+      const el = entry.target; const to = +el.dataset.counter; let v=0;
+      const tick=()=>{ v += Math.ceil((to-v)/8); el.textContent=v; if(v<to) requestAnimationFrame(tick); };
+      tick(); counterIo.unobserve(el);
+    });
+  },{threshold:.7});
+  counters.forEach(c=>counterIo.observe(c));
+
+  // Magnetic buttons
+  document.querySelectorAll('.magnet').forEach(btn=>{
+    btn.addEventListener('mousemove', e=>{
+      const r = btn.getBoundingClientRect();
+      const x = e.clientX - (r.left+r.width/2);
+      const y = e.clientY - (r.top+r.height/2);
+      btn.style.transform = `translate(${x*0.12}px,${y*0.12}px)`;
+    });
+    btn.addEventListener('mouseleave', ()=> btn.style.transform='translate(0,0)');
+  });
+</script>
+</body>
+</html>
